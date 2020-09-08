@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AccountsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AccountList">
+    <Key>
+      <PropertyRef Name="Account_Number" />
+    </Key>
+    <Property Name="Account_Number" Type="Int32" Nullable="false" />
+    <Property Name="Account_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Account_Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Balance_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Currency" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Opening_Balance" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="AccountTransactions" Relationship="Self.FK_AccountTransaction_AccountList" FromRole="AccountList" ToRole="AccountTransaction" />
+  </EntityType>
+  <EntityType Name="AccountTransaction">
+    <Key>
+      <PropertyRef Name="Account_Number" />
+      <PropertyRef Name="Account_Name" />
+      <PropertyRef Name="Value_Date" />
+      <PropertyRef Name="Currency" />
+      <PropertyRef Name="Debit_Credit" />
+    </Key>
+    <Property Name="Account_Number" Type="Int32" Nullable="false" />
+    <Property Name="Account_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Value_Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Currency" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Debit_Amount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Credit_Amount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Debit_Credit" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="TransactionNarrative" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AccountList" Relationship="Self.FK_AccountTransaction_AccountList" FromRole="AccountTransaction" ToRole="AccountList" />
+  </EntityType>
+  <Association Name="FK_AccountTransaction_AccountList">
+    <End Role="AccountList" Type="Self.AccountList" Multiplicity="1" />
+    <End Role="AccountTransaction" Type="Self.AccountTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccountList">
+        <PropertyRef Name="Account_Number" />
+      </Principal>
+      <Dependent Role="AccountTransaction">
+        <PropertyRef Name="Account_Number" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AccountsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AccountLists" EntityType="Self.AccountList" />
+    <EntitySet Name="AccountTransactions" EntityType="Self.AccountTransaction" />
+    <AssociationSet Name="FK_AccountTransaction_AccountList" Association="Self.FK_AccountTransaction_AccountList">
+      <End Role="AccountList" EntitySet="AccountLists" />
+      <End Role="AccountTransaction" EntitySet="AccountTransactions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

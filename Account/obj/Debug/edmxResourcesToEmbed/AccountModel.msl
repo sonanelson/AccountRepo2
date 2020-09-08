@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AccountsModelStoreContainer" CdmEntityContainer="AccountsEntities">
+    <EntitySetMapping Name="AccountLists">
+      <EntityTypeMapping TypeName="AccountsModel.AccountList">
+        <MappingFragment StoreEntitySet="AccountList">
+          <ScalarProperty Name="Account_Number" ColumnName="Account Number" />
+          <ScalarProperty Name="Account_Name" ColumnName="Account Name" />
+          <ScalarProperty Name="Account_Type" ColumnName="Account Type" />
+          <ScalarProperty Name="Balance_Date" ColumnName="Balance Date" />
+          <ScalarProperty Name="Currency" ColumnName="Currency" />
+          <ScalarProperty Name="Opening_Balance" ColumnName="Opening Balance" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountTransactions">
+      <EntityTypeMapping TypeName="AccountsModel.AccountTransaction">
+        <MappingFragment StoreEntitySet="AccountTransaction">
+          <ScalarProperty Name="Account_Number" ColumnName="Account Number" />
+          <ScalarProperty Name="Account_Name" ColumnName="Account Name" />
+          <ScalarProperty Name="Value_Date" ColumnName="Value Date" />
+          <ScalarProperty Name="Currency" ColumnName="Currency" />
+          <ScalarProperty Name="Debit_Amount" ColumnName="Debit Amount" />
+          <ScalarProperty Name="Credit_Amount" ColumnName="Credit Amount" />
+          <ScalarProperty Name="Debit_Credit" ColumnName="Debit/Credit" />
+          <ScalarProperty Name="TransactionNarrative" ColumnName="TransactionNarrative" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

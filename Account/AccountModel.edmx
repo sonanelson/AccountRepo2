@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AccountsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AccountList">
+          <Key>
+            <PropertyRef Name="Account Number" />
+          </Key>
+          <Property Name="Account Number" Type="int" Nullable="false" />
+          <Property Name="Account Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Account Type" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Balance Date" Type="date" Nullable="false" />
+          <Property Name="Currency" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Opening Balance" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Accounts.dbo.AccountTransaction' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="AccountTransaction">
+          <Key>
+            <PropertyRef Name="Account Number" />
+            <PropertyRef Name="Account Name" />
+            <PropertyRef Name="Value Date" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="Debit/Credit" />
+          </Key>
+          <Property Name="Account Number" Type="int" Nullable="false" />
+          <Property Name="Account Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Value Date" Type="date" Nullable="false" />
+          <Property Name="Currency" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Debit Amount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Credit Amount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Debit/Credit" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TransactionNarrative" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_AccountTransaction_AccountList">
+          <End Role="AccountList" Type="Self.AccountList" Multiplicity="1" />
+          <End Role="AccountTransaction" Type="Self.AccountTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountList">
+              <PropertyRef Name="Account Number" />
+            </Principal>
+            <Dependent Role="AccountTransaction">
+              <PropertyRef Name="Account Number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AccountsModelStoreContainer">
+          <EntitySet Name="AccountList" EntityType="Self.AccountList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountTransaction" EntityType="Self.AccountTransaction" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [AccountTransaction].[Account Number] AS [Account Number], 
+    [AccountTransaction].[Account Name] AS [Account Name], 
+    [AccountTransaction].[Value Date] AS [Value Date], 
+    [AccountTransaction].[Currency] AS [Currency], 
+    [AccountTransaction].[Debit Amount] AS [Debit Amount], 
+    [AccountTransaction].[Credit Amount] AS [Credit Amount], 
+    [AccountTransaction].[Debit/Credit] AS [Debit/Credit], 
+    [AccountTransaction].[TransactionNarrative] AS [TransactionNarrative]
+    FROM [dbo].[AccountTransaction] AS [AccountTransaction]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_AccountTransaction_AccountList" Association="Self.FK_AccountTransaction_AccountList">
+            <End Role="AccountList" EntitySet="AccountList" />
+            <End Role="AccountTransaction" EntitySet="AccountTransaction" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AccountsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AccountList">
+          <Key>
+            <PropertyRef Name="Account_Number" />
+          </Key>
+          <Property Name="Account_Number" Type="Int32" Nullable="false" />
+          <Property Name="Account_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Account_Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Balance_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Currency" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Opening_Balance" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="AccountTransactions" Relationship="Self.FK_AccountTransaction_AccountList" FromRole="AccountList" ToRole="AccountTransaction" />
+        </EntityType>
+        <EntityType Name="AccountTransaction">
+          <Key>
+            <PropertyRef Name="Account_Number" />
+            <PropertyRef Name="Account_Name" />
+            <PropertyRef Name="Value_Date" />
+            <PropertyRef Name="Currency" />
+            <PropertyRef Name="Debit_Credit" />
+          </Key>
+          <Property Name="Account_Number" Type="Int32" Nullable="false" />
+          <Property Name="Account_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Value_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Currency" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Debit_Amount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Credit_Amount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Debit_Credit" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TransactionNarrative" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AccountList" Relationship="Self.FK_AccountTransaction_AccountList" FromRole="AccountTransaction" ToRole="AccountList" />
+        </EntityType>
+        <Association Name="FK_AccountTransaction_AccountList">
+          <End Role="AccountList" Type="Self.AccountList" Multiplicity="1" />
+          <End Role="AccountTransaction" Type="Self.AccountTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountList">
+              <PropertyRef Name="Account_Number" />
+            </Principal>
+            <Dependent Role="AccountTransaction">
+              <PropertyRef Name="Account_Number" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AccountsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountLists" EntityType="Self.AccountList" />
+          <EntitySet Name="AccountTransactions" EntityType="Self.AccountTransaction" />
+          <AssociationSet Name="FK_AccountTransaction_AccountList" Association="Self.FK_AccountTransaction_AccountList">
+            <End Role="AccountList" EntitySet="AccountLists" />
+            <End Role="AccountTransaction" EntitySet="AccountTransactions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AccountsModelStoreContainer" CdmEntityContainer="AccountsEntities">
+          <EntitySetMapping Name="AccountLists">
+            <EntityTypeMapping TypeName="AccountsModel.AccountList">
+              <MappingFragment StoreEntitySet="AccountList">
+                <ScalarProperty Name="Account_Number" ColumnName="Account Number" />
+                <ScalarProperty Name="Account_Name" ColumnName="Account Name" />
+                <ScalarProperty Name="Account_Type" ColumnName="Account Type" />
+                <ScalarProperty Name="Balance_Date" ColumnName="Balance Date" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Opening_Balance" ColumnName="Opening Balance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountTransactions">
+            <EntityTypeMapping TypeName="AccountsModel.AccountTransaction">
+              <MappingFragment StoreEntitySet="AccountTransaction">
+                <ScalarProperty Name="Account_Number" ColumnName="Account Number" />
+                <ScalarProperty Name="Account_Name" ColumnName="Account Name" />
+                <ScalarProperty Name="Value_Date" ColumnName="Value Date" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Debit_Amount" ColumnName="Debit Amount" />
+                <ScalarProperty Name="Credit_Amount" ColumnName="Credit Amount" />
+                <ScalarProperty Name="Debit_Credit" ColumnName="Debit/Credit" />
+                <ScalarProperty Name="TransactionNarrative" ColumnName="TransactionNarrative" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
